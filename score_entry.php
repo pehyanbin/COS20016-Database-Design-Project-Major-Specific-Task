@@ -83,7 +83,7 @@ $divisions = $conn->query("SELECT * FROM Division ORDER BY DivisionName");
 
             <div id="endsContainer"></div>
 
-            <button type="submit" class="submit-btn">Submit Score</button>
+            <button type="button" class="submit-btn" onclick="validateAndSubmit()">Submit Score</button>
         </form>
     </div>
 
@@ -168,6 +168,28 @@ $divisions = $conn->query("SELECT * FROM Division ORDER BY DivisionName");
             if(input.value!==''){input.value='';return;}
         }
     }
+
+    function validateAndSubmit() {
+        const inputs = document.querySelectorAll('.arrow-input');
+        let allFilled = true;
+
+        inputs.forEach(input => {
+            if (input.value.trim() === '') {
+                allFilled = false;
+                input.classList.add('missing');
+            } else {
+                input.classList.remove('missing');
+            }
+        });
+
+        if (!allFilled) {
+            alert("Please fill in all arrow scores before submitting.");
+            return;
+        }
+
+        document.getElementById('scoreForm').submit();
+    }
+
 
     function backToStep1(){
         document.getElementById('step2').classList.remove('active');
