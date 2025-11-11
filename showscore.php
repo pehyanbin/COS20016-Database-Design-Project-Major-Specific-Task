@@ -84,7 +84,7 @@
     <meta name="description" 	content="Show archery scores">
     <meta name="viewport" 		content="width=device-width, initial-scale=1.0">
     <title>Archery Database - Show Scores</title>
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h2 class="title">Show Scores</h2>
