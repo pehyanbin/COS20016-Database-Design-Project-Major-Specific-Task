@@ -71,7 +71,7 @@
 
     if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
         ob_start();
-        include 'table_fragment.php';
+        include 'result.php';
         echo ob_get_clean();
         exit;
     }
