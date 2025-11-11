@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $target_number  = intval($_POST['target_number']);
     $ends           = $_POST['end'];
 
-    // --- Fetch Competition ---
+    // Fetch Competition 
     $competition_res = $conn->prepare("SELECT * FROM Competitions WHERE CompetitionID = ?");
     $competition_res->bind_param("i", $competition_id);
     $competition_res->execute();
@@ -50,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $competition = $competition_result->fetch_assoc();
     $score_date = $competition['CompetitionDate'];
 
-    // --- Fetch Round ---
+    // Fetch Round
     $round_res = $conn->prepare("SELECT * FROM Rounds WHERE RoundID = ?");
     $round_res->bind_param("i", $round_id);
     $round_res->execute();
     $round_result = $round_res->get_result();
     $round = $round_result->fetch_assoc();
 
-    // --- Fetch Range ---
+    // Fetch Range 
     $range_stmt = $conn->prepare("
         SELECT r.*, rd.Distance, rd.NumOfArr, rd.TargetFace
         FROM Ranges r
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $range_result = $range_stmt->get_result();
     $range = $range_result->fetch_assoc();
 
-    // --- Fetch Archer ---
+    // Fetch Archer 
     $archer_stmt = $conn->prepare("SELECT * FROM Archers WHERE ArchersID = ?");
     $archer_stmt->bind_param("i", $archer_id);
     $archer_stmt->execute();
@@ -77,18 +77,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $archer = $archer_result->fetch_assoc();
     if (!$archer) die("Archer not found.");
 
-    // --- Compute Archer Age ---
+    // Compute Archer Age 
     if (empty($archer['DateOfBirth'])) die("Archer's date of birth missing. Cannot determine category.");
     $dob = new DateTime($archer['DateOfBirth']);
     $today = new DateTime();
     $age = $dob->diff($today)->y;
 
-    // --- Determine Age Class ---
-    if ($age >= 60) $ageClass = '60+';
-    elseif ($age >= 50) $ageClass = '50+';
-    else $ageClass = 'Open';
+    // Determine Age Class by Age
+    if ($age >= 70) {
+        $ageClass = '70+';
+    } elseif ($age >= 60) {
+        $ageClass = '60+';
+    } elseif ($age >= 50) {
+        $ageClass = '50+';
+    } elseif ($age < 14) {
+        $ageClass = 'Under 14';
+    } elseif ($age < 16) {
+        $ageClass = 'Under 16';
+    } elseif ($age < 18) {
+        $ageClass = 'Under 18';
+    } elseif ($age < 21) {
+        $ageClass = 'Under 21';
+    } else {
+        $ageClass = 'Open';
+    }
 
-    // --- Fetch Category ---
+    // Fetch Category 
     $cat_stmt = $conn->prepare("
         SELECT c.*, d.DivisionName
         FROM Categories c
