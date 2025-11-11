@@ -1,54 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title> 
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>Login</h2>
-<form method="post" action="">
-    <label>Username:</label>
-    <input type="text" name="username" required><br>
-    <label>Password:</label>
-    <input type="password" name="password" required><br>
-    <button type="submit">Login</button>
-</form>
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    
-    $host = "localhost";
-    $dbname = "yanbindatabase1";
-    
-    try {
-        // Create database connection with user-provided credentials
-        $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        $stmt = $conn->prepare("SELECT * FROM members WHERE username = ?");
-        $stmt->execute([$username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($user) {
-            if (password_verify($password, $user['password_hash'])) {
-                session_start();
-                $_SESSION['username'] = $username;
-                $_SESSION['password'] = $password; // Store for DB connections
-                $_SESSION['role'] = $user['role'];
-                
-                header("Location: dashboard.php");
-                exit;
-            } else {
-                $error = "Invalid username or password.";
-            }
-        } else {
-            $error = "Invalid username or password.";
-        }
-    } catch(PDOException $e) {
-        $error = "Database connection failed: " . $e->getMessage();
-    }
-}
-if(isset($error)) echo "<p class='error'>$error</p>"; ?>
+  <?php include 'header.inc'; ?>
+  <div class="login-container">
+    <h2>Login</h2>
+    <?php if (isset($_GET['error'])): ?>
+      <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
+    <?php endif; ?>
+    <form action="login_process.php" method="POST">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p class="link-text">No account? <a href="create_account.php">Create Account</a></p>
+  </div>
+  <?php include 'footer.inc'; ?>
 </body>
 </html>
