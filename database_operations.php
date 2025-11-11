@@ -28,10 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $queryType = strtoupper(explode(' ', trim($query))[0]);
                 $allowedQueries = ['SELECT', 'INSERT', 'UPDATE', 'DESCRIBE', 'EXPLAIN'];
                 
-                if (in_array($queryType, $allowedQueries)) {
+                if (stripos($query, 'members') !== false || stripos($query, 'Members') !== false)  {
+                    $message = "Error: Access to the 'members' table is restricted to administrators.";
+                }
+                else if (in_array($queryType, $allowedQueries)) {
                     $stmt = $conn->prepare($query);
                     $stmt->execute();
-                    
+
                     if ($queryType === 'SELECT' || $queryType === 'DESCRIBE' || $queryType === 'EXPLAIN') {
                         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         $message = "Query executed successfully! Found " . count($results) . " rows.";
