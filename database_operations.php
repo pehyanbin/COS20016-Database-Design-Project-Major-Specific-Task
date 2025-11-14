@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['query'])) {
     <p><strong>Role:</strong> <?= ucfirst($role) ?></p>
     <?php if ($role !== 'admin'): ?><p class="error">Limited to SELECT, INSERT, UPDATE. No access to <code>members</code>.</p><?php endif; ?>
     <form method="post">
-        <textarea name="query" rows="3" cols ="100" required><?= htmlspecialchars($_POST['query'] ?? 'SELECT * FROM Archers LIMIT 5') ?></textarea><br>
+        <textarea name="query" rows="3" cols="100" required><?= htmlspecialchars($_POST['query'] ?? 'SELECT * FROM Archers LIMIT 5') ?></textarea><br>
         <button type="submit">Execute</button>
     </form>
     <?php if ($message): ?><p class="<?= strpos($message,'Error')?'error':'success' ?>"><?= $message ?></p><?php endif; ?>

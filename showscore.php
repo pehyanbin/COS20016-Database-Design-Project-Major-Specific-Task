@@ -9,26 +9,21 @@ if (!isset($_SESSION['user_id'])) {
 include 'header.inc';
 include 'settings.php';
 
-// Fetch dropdown data
 $competitions = $conn->query("SELECT CompetitionID, CompetitionName FROM Competitions ORDER BY CompetitionDate DESC");
 $rounds = $conn->query("SELECT RoundID, RoundName FROM Rounds");
 $divisions = $conn->query("SELECT DivisionID, DivisionName FROM Division");
 
-// Build filters
 $whereClauses = [];
 if (!empty($_GET['competition'])) $whereClauses[] = "s.CompetitionID = " . intval($_GET['competition']);
 if (!empty($_GET['round'])) $whereClauses[] = "s.RoundID = " . intval($_GET['round']);
 if (!empty($_GET['division'])) $whereClauses[] = "c.DivisionID = " . intval($_GET['division']);
 if (!empty($_GET['gender'])) $whereClauses[] = "a.Gender = '" . $conn->real_escape_string($_GET['gender']) . "'";
-
 $whereSQL = count($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
 
-// Sorting
 $allowedSort = ['ArcherName'=>'Archer Name','TotalScore'=>'Total Score','ScoreDate'=>'Date'];
 $sort = isset($_GET['sort']) && array_key_exists($_GET['sort'], $allowedSort) ? $_GET['sort'] : 'ScoreDate';
 $order = strtoupper($_GET['order'] ?? '') === 'ASC' ? 'ASC' : 'DESC';
 
-// Pagination
 $limit = intval($_GET['limit'] ?? 25);
 if (!in_array($limit, [10,25,50])) {
     $limit = 25;
@@ -36,12 +31,10 @@ if (!in_array($limit, [10,25,50])) {
 $page = max(1, intval($_GET['page'] ?? 1));
 $offset = ($page - 1) * $limit;
 
-// Count total
 $countQuery = "SELECT COUNT(*) AS total FROM Scores s JOIN Archers a ON s.ArcherID = a.ArchersID JOIN Categories c ON s.CategoryID = c.CategoryID JOIN Division d ON c.DivisionID = d.DivisionID JOIN Rounds r ON s.RoundID = r.RoundID LEFT JOIN Competitions comp ON s.CompetitionID = comp.CompetitionID $whereSQL";
 $totalRows = $conn->query($countQuery)->fetch_assoc()['total'];
 $totalPages = ceil($totalRows / $limit);
 
-// Main query
 $query = "
   SELECT 
     CONCAT(a.ArcherFName, ' ', a.ArcherLName) AS ArcherName,
@@ -155,7 +148,6 @@ $results = $conn->query($query);
         <p>No scores found.</p>
         <?php endif; ?>
 
-        <!-- Pagination -->
         <?php if ($totalPages > 1): ?>
         <div class="pagination">
             <?php

@@ -10,8 +10,8 @@
   <?php include 'header.inc'; ?>
   <div class="container">
     <h2>Create Account</h2>
-    <?php if (isset($_GET['error'])): ?><p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p><?php endif; ?>
-    <?php if (isset($_GET['success'])): ?><p class="success"><?php echo htmlspecialchars($_GET['success']); ?></p><?php endif; ?>
+    <?php if (isset($_GET['error'])): ?><p class="error"><?= htmlspecialchars($_GET['error']); ?></p><?php endif; ?>
+    <?php if (isset($_GET['success'])): ?><p class="success"><?= htmlspecialchars($_GET['success']); ?></p><?php endif; ?>
     <form action="create_account_process.php" method="POST">
       <input type="text" name="username" placeholder="Username" required>
       <input type="email" name="email" placeholder="Email" required>

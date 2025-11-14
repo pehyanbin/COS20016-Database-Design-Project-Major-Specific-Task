@@ -25,39 +25,47 @@ if (isset($_POST['delete_user'])) {
 $users = $conn->query("SELECT id, username, email, role FROM `$table`")->fetchAll();
 ?>
 <!DOCTYPE html>
-<html><head><title>Manage Users</title><link rel="stylesheet" href="style.css"></head><body>
-<?php include 'header.inc'; ?>
-<div class="container">
-    <h2>User Management</h2>
-    <?php if ($message): ?><p class="<?= strpos($message,'Error')?'error':'success' ?>"><?= htmlspecialchars($message) ?></p><?php endif; ?>
-    <div class="section">
-        <h3>Add User</h3>
-        <form method="post">
-            <input name="username" placeholder="Username" required>
-            <input name="email" type="email" placeholder="Email" required>
-            <input name="password" type="password" placeholder="Password" required>
-            <select name="role"><option value="member">Member</option><option value="admin">Admin</option></select>
-            <button name="add_user">Add</button>
-        </form>
+<html>
+    <head>
+        <title>Manage Users</title><link rel="stylesheet" href="style.css">
+    </head>
+    
+    <body>
+    <?php include 'header.inc'; ?>
+    <div class="container">
+        <h2>User Management</h2>
+        <?php if ($message): ?><p class="<?= strpos($message,'Error')?'error':'success' ?>"><?= htmlspecialchars($message) ?></p><?php endif; ?>
+        <div class="section">
+            <h3>Add User</h3>
+            <form method="post">
+                <input name="username" placeholder="Username" required>
+                <input name="email" type="email" placeholder="Email" required>
+                <input name="password" type="password" placeholder="Password" required>
+                <select name="role"><option value="member">Member</option><option value="admin">Admin</option></select>
+                <button name="add_user">Add</button>
+            </form>
+        </div>
+        <div class="section">
+            <h3>Users</h3>
+            <table><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Action</th></tr>
+            <?php foreach ($users as $u): ?>
+            <tr>
+                <td><?= $u['id'] ?></td>
+                <td><?= htmlspecialchars($u['username']) ?></td>
+                <td><?= htmlspecialchars($u['email']) ?></td>
+                <td><?= $u['role'] ?></td>
+                <td><?php if ($u['id'] != $_SESSION['user_id']): ?>
+                <form method="post" style="display: inline;">
+                    <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
+                    <button type="submit" name="delete_user" id="delete-user-btn" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                </form>
+                <?php endif; ?></td>
+            </tr>
+            <?php endforeach; ?>
+            </table>
+        </div>
+        <p><a href="success.php">Back</a></p>
     </div>
-    <div class="section">
-        <h3>Users</h3>
-        <table><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Action</th></tr>
-        <?php foreach ($users as $u): ?>
-        <tr>
-            <td><?= $u['id'] ?></td>
-            <td><?= htmlspecialchars($u['username']) ?></td>
-            <td><?= htmlspecialchars($u['email']) ?></td>
-            <td><?= $u['role'] ?></td>
-            <td><?php if ($u['id'] != $_SESSION['user_id']): ?>
-            <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
-            <button name="delete_user" onclick="return confirm('Delete?')">Delete</button>
-            <?php endif; ?></td>
-        </tr>
-        <?php endforeach; ?>
-        </table>
-    </div>
-    <p><a href="success.php">Back</a></p>
-</div>
-<?php include 'footer.inc'; ?>
-</body></html>
+    <?php include 'footer.inc'; ?>
+    </body>
+</html>

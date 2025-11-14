@@ -1,7 +1,6 @@
 <?php
-// settings.php
 $host = "localhost";
-$user = "root";  // Change if needed
+$user = "root";
 $pwd = "";
 $sql_db = "yanbindatabase1";
 
