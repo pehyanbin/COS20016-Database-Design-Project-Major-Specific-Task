@@ -1,13 +1,12 @@
 <?php
-// db_config.php
 $host = 'localhost';
 $database = 'yanbindatabase1';
-$table = 'members';  
+$table = 'members';
 
 function connectDB() {
     global $host, $database;
     try {
-        $conn = new PDO("mysql:host=$host;dbname=$database", 'root', ''); // Adjust if needed
+        $conn = new PDO("mysql:host=$host;dbname=$database", 'root', '');
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $conn;
     } catch(PDOException $e) {

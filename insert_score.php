@@ -10,7 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 include 'settings.php';
 
-// === AJAX: Get Ranges ===
 if (isset($_GET['action']) && $_GET['action'] === 'get_ranges') {
     $round_id = intval($_GET['round_id']);
     $stmt = $conn->prepare("
@@ -36,7 +35,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_ranges') {
     exit;
 }
 
-// === AJAX: Get Division & End Info ===
 if (isset($_GET['action']) && $_GET['action'] === 'get_division') {
     $archer_id = intval($_GET['archer_id']);
     $stmt = $conn->prepare("SELECT DefaultDivisionID FROM Archers WHERE ArchersID = ?");
@@ -49,7 +47,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_division') {
     exit;
 }
 
-// === MAIN: Insert Score ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $competition_id = intval($_POST['competition_id']);
     $round_id       = intval($_POST['round_id']);
@@ -59,14 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $target_number  = intval($_POST['target_number']);
     $ends           = $_POST['end'];
 
-    // Fetch metadata
     $comp = $conn->query("SELECT * FROM Competitions WHERE CompetitionID = $competition_id")->fetch_assoc();
     $round = $conn->query("SELECT * FROM Rounds WHERE RoundID = $round_id")->fetch_assoc();
     $range = $conn->query("SELECT * FROM Ranges r JOIN RoundDistance rd ON r.RoundDistanceID = rd.RoundDistanceID WHERE r.RangeID = $range_id")->fetch_assoc();
     $archer = $conn->query("SELECT * FROM Archers WHERE ArchersID = $archer_id")->fetch_assoc();
     $category = $conn->query("SELECT * FROM Categories WHERE CategoryID = (SELECT CategoryID FROM Archers WHERE ArchersID = $archer_id LIMIT 1)")->fetch_assoc();
 
-    // Insert Score record
     $stmt = $conn->prepare("INSERT INTO Scores (CompetitionID, RoundID, ArcherID, CategoryID, TargetNumber, ScoreDate) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("iiiiis", $competition_id, $round_id, $archer_id, $category['CategoryID'], $target_number, $comp['CompetitionDate']);
     $stmt->execute();

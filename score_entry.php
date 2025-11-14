@@ -9,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 <?php include 'settings.php'; ?>
 
 <?php
-// Fetch data
 $competitions = $conn->query("SELECT * FROM Competitions ORDER BY CompetitionDate DESC");
 $rounds = $conn->query("SELECT RoundID, RoundName FROM Rounds ORDER BY RoundName");
 $archers = $conn->query("SELECT * FROM Archers ORDER BY ArcherFName, ArcherLName");
@@ -25,7 +24,6 @@ $divisions = $conn->query("SELECT * FROM Division ORDER BY DivisionName");
 
     <h2>Archery Score Entry</h2>
 
-    <!-- Step 1: Selection -->
     <div id="step1" class="step active">
         <form id="selectionForm">
             <label>Competition</label>
@@ -68,7 +66,6 @@ $divisions = $conn->query("SELECT * FROM Division ORDER BY DivisionName");
         </form>
     </div>
 
-    <!-- Step 2: Score Input -->
     <div id="step2" class="step">
         <div id="scoreInputContainer"></div>
         <form id="scoreForm" action="insert_score.php" method="POST">
@@ -123,7 +120,6 @@ $divisions = $conn->query("SELECT * FROM Division ORDER BY DivisionName");
         document.getElementById('form_archer_id').value = archer;
         document.getElementById('form_target_number').value = target;
 
-        // Fetch archer division
         fetch(`insert_score.php?action=get_division&archer_id=${archer}`)
             .then(r => r.json())
             .then(data => {

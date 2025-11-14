@@ -11,7 +11,7 @@
   <div class="login-container">
     <h2>Login</h2>
     <?php if (isset($_GET['error'])): ?>
-      <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
+      <p class="error"><?= htmlspecialchars($_GET['error']); ?></p>
     <?php endif; ?>
     <form action="login_process.php" method="POST">
       <input type="text" name="username" placeholder="Username" required>
